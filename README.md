@@ -24,9 +24,6 @@ Digitalizar y optimizar el proceso de recepción, registro, distribución y segu
 
 ---
 
-
----
-
 ## 🚀 Instalación y Configuración
 
 ### Requisitos Previos
@@ -41,6 +38,7 @@ Digitalizar y optimizar el proceso de recepción, registro, distribución y segu
 
 ```bash
 # Clonar el repositorio
+
 git clone git@github.com:naza2/sistema-correspondencia.git
 
 # Navegar al directorio del proyecto
