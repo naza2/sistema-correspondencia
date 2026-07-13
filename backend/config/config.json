@@ -1,0 +1,29 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "correspondencia_db",
+    "host": "postgres",
+    "dialect": "postgres",
+    "port": 5432,
+    "logging": true
+  },
+  "test": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "correspondencia_test",
+    "host": "postgres",
+    "dialect": "postgres",
+    "port": 5432,
+    "logging": false
+  },
+  "production": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "correspondencia_production",
+    "host": "postgres",
+    "dialect": "postgres",
+    "port": 5432,
+    "logging": false
+  }
+}

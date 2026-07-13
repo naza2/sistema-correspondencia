@@ -1,0 +1,112 @@
+# ============================================
+# DOCKER-COMPOSE.YML - Desarrollo
+# ============================================
+
+services:
+  # ============================================
+  # Base de datos PostgreSQL
+  # ============================================
+  
+  postgres:
+    image: postgres:15-alpine
+    container_name: correspondencia_db_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: correspondencia_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - correspondencia_network
+
+  # ============================================
+  # Redis (Caché)
+  # ============================================
+  
+  redis:
+    image: redis:7-alpine
+    container_name: correspondencia_cache_dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - correspondencia_network
+
+  # ============================================
+  # Adminer (Gestión de Base de Datos)
+  # ============================================
+  
+  adminer:
+    image: adminer:latest
+    container_name: correspondencia_adminer_dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - correspondencia_network
+
+  # ============================================
+  # Backend (API)
+  # ============================================
+  
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    container_name: correspondencia_backend_dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=correspondencia_db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - correspondencia_network
+
+# ============================================
+# Volúmenes
+# ============================================
+
+volumes:
+  postgres_data:
+  redis_data:
+
+# ============================================
+# Redes
+# ============================================
+
+networks:
+  correspondencia_network:
+    driver: bridge

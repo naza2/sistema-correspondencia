@@ -1,0 +1,27 @@
+# ============================================
+# BACKEND/DOCKERFILE.DEV - Desarrollo
+# ============================================
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Instalar dependencias
+COPY package*.json ./
+RUN npm install
+
+# Instalar herramientas adicionales
+RUN apk add --no-cache curl
+
+# Copiar código fuente
+COPY . .
+
+# Exponer puerto
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3000/health || exit 1
+
+# Comando de inicio
+CMD ["npm", "run", "dev"]
