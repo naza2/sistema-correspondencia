@@ -22,7 +22,6 @@ Digitalizar y optimizar el proceso de recepción, registro, distribución y segu
 | **CI/CD** | GitHub Actions | - |
 | **Cloud** | AWS / Azure | - |
 
-
 ---
 
 ## 🚀 Instalación y Configuración
@@ -39,7 +38,8 @@ Digitalizar y optimizar el proceso de recepción, registro, distribución y segu
 
 ```bash
 # Clonar el repositorio
-git clone git@github.com:nazaz/sistema-correspondencia.git
+
+git clone git@github.com:naza2/sistema-correspondencia.git
 
 # Navegar al directorio del proyecto
 cd sistema-correspondencia
