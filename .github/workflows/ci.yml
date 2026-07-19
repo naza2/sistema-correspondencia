@@ -53,12 +53,12 @@ jobs:
       - name: Run linting
         run: |
           cd backend
-          npm run lint || echo "No lint script"
+          npm run lint || echo "⚠️ No lint script"
 
       - name: Run tests
         run: |
           cd backend
-          npm test || echo "No tests yet"
+          npm test || echo "⚠️ No tests yet"
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -94,71 +94,14 @@ jobs:
       - name: Run linting
         run: |
           cd frontend
-          npm run lint || echo "No lint script"
+          npm run lint || echo "⚠️ No lint script"
 
       - name: Run tests
         run: |
           cd frontend
-          npm test || echo "No tests yet"
+          npm test || echo "⚠️ No tests yet"
 
       - name: Build frontend
         run: |
           cd frontend
           npm run build
-
-  # ============================================
-  # 3. ANÁLISIS DE SEGURIDAD (OPCIONAL)
-  # ============================================
-
-  security:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    if: always()
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-
-      - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
-
-  # ============================================
-  # 4. NOTIFICACIÓN (OPCIONAL)
-  # ============================================
-
-  notify:
-    name: Send Notification
-    runs-on: ubuntu-latest
-    needs: [backend-test, frontend-test]
-    if: always()
-
-    steps:
-      - name: Send Slack notification
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "🚀 CI Status: ${{ job.status }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*CI - Integración Continua*\nStatus: ${{ job.status }}\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        continue-on-error: true

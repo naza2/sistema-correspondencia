@@ -1,0 +1,30 @@
+# ============================================
+# .do/app.yaml - Configuración de DigitalOcean
+# ============================================
+
+name: sistema-correspondencia
+
+services:
+  - name: backend
+    environment_slug: node-js
+    git:
+      branch: main
+      repo_clone_url: https://github.com/naza2/sistema-correspondencia
+    build_command: |
+      cd backend
+      npm install
+    run_command: |
+      cd backend
+      node server.js
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    routes:
+      - path: /
+    envs:
+      - key: NODE_ENV
+        value: production
+        scope: RUN_TIME
+      - key: PORT
+        value: "3000"
+        scope: RUN_TIME
