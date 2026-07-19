@@ -1,31 +1,22 @@
 {
-  "name": "frontend",
+  "name": "correspondencia-frontend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "detect-libc": "^2.1.2",
-    "fdir": "^6.5.0",
-    "lightningcss": "^1.32.0",
-    "lightningcss-win32-x64-msvc": "^1.32.0",
-    "nanoid": "^3.3.16",
-    "picocolors": "^1.1.1",
-    "picomatch": "^4.0.5",
-    "postcss": "^8.5.18",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "rolldown": "^1.1.5",
-    "scheduler": "^0.27.0",
-    "source-map-js": "^1.2.1",
-    "tinyglobby": "^0.2.17",
-    "vite": "^8.1.4"
-  },
-  "devDependencies": {},
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.2",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "vite": "^4.4.5"
+  }
 }
