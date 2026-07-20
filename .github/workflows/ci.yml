@@ -61,7 +61,7 @@ jobs:
           npm test || echo "⚠️ No tests yet"
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           directory: backend/coverage
           flags: backend
