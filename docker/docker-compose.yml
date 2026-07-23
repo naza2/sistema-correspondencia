@@ -1,7 +1,12 @@
-# docker/docker-compose.yml
-version: '3.8'
+# ============================================
+# docker/docker-compose.yml - Desarrollo
+# ============================================
 
 services:
+  # ============================================
+  # 1. BASE DE DATOS (PostgreSQL)
+  # ============================================
+  
   postgres:
     image: postgres:15-alpine
     container_name: correspondencia_db_dev
@@ -19,7 +24,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - correspondencia_network
 
+  # ============================================
+  # 2. CACHÉ (Redis)
+  # ============================================
+  
   redis:
     image: redis:7-alpine
     container_name: correspondencia_cache_dev
@@ -33,7 +44,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - correspondencia_network
 
+  # ============================================
+  # 3. GESTIÓN DE BD (Adminer)
+  # ============================================
+  
   adminer:
     image: adminer:latest
     container_name: correspondencia_admin_dev
@@ -42,7 +59,76 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
+    networks:
+      - correspondencia_network
+
+  # ============================================
+  # 4. BACKEND (API)
+  # ============================================
+  
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    container_name: correspondencia_backend_dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=correspondencia_db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - correspondencia_network
+
+  # ============================================
+  # 5. FRONTEND (React)
+  # ============================================
+  
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    container_name: correspondencia_frontend_dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3000/api
+    depends_on:
+      - backend
+    networks:
+      - correspondencia_network
+
+# ============================================
+# VOLÚMENES
+# ============================================
 
 volumes:
   postgres_data:
   redis_data:
+
+# ============================================
+# REDES
+# ============================================
+
+networks:
+  correspondencia_network:
+    driver: bridge
