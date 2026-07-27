@@ -1,0 +1,23 @@
+import { defineConfig } from 'cypress';
+
+export default defineConfig({
+    e2e: {
+        baseUrl: 'http://localhost:5173',
+        specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
+        supportFile: 'cypress/support/index.js',
+        viewportWidth: 1280,
+        viewportHeight: 720,
+        video: true,
+        screenshotOnRunFailure: true,
+        defaultCommandTimeout: 10000,
+        env: {
+            apiUrl: 'http://localhost:3000/api'
+        }
+    },
+    component: {
+        devServer: {
+            framework: 'react',
+            bundler: 'vite'
+        }
+    }
+});

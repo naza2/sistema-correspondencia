@@ -1,0 +1,227 @@
+/* ============================================
+   src/pages/LoginPage.css - Estilos de Login
+   ============================================ */
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #003366 0%, #004B87 100%);
+    padding: 20px;
+}
+
+.login-container {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 16px;
+}
+
+.login-header h1 {
+    font-size: 20px;
+    color: #003366;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: #6C757D;
+    font-size: 14px;
+}
+
+.login-error {
+    background: #F8D7DA;
+    color: #721C24;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.login-error i {
+    font-size: 16px;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: block;
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #CED4DA;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #003366;
+    box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: #003366;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-login:hover:not(:disabled) {
+    background: #002244;
+}
+
+.btn-login:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.login-footer {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #E9ECEF;
+    text-align: center;
+    font-size: 13px;
+    color: #6C757D;
+}
+
+.login-footer strong {
+    color: #495057;
+}
+
+/* ============================================
+   HEADER STYLES
+   ============================================ */
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background: white;
+    border-bottom: 1px solid #E9ECEF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo {
+    width: 40px;
+    height: auto;
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #003366;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-user {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-weight: 500;
+    color: #212529;
+}
+
+.header-role {
+    font-size: 12px;
+    font-weight: 400;
+    color: #6C757D;
+    text-transform: uppercase;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #DC3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-logout:hover {
+    background: #C82333;
+}
+
+.dashboard-page {
+    min-height: 100vh;
+    background: #F8F9FA;
+}
+
+.dashboard-content {
+    padding: 32px;
+}
+
+.dashboard-content h1 {
+    color: #003366;
+    margin-bottom: 8px;
+}
+
+.dashboard-content p {
+    color: #6C757D;
+    font-size: 16px;
+}
+

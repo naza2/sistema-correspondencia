@@ -2,20 +2,32 @@
 // server.js - Punto de entrada del Backend
 // ============================================
 
-const express = require('express');
-const app = express();
+const app = require('./src/config/app');
+const { sequelize } = require('./src/config/database');
+
 const PORT = process.env.PORT || 3000;
 
-app.get('/health', (req, res) => {
-    res.json({
-        status: 'OK',
-        service: 'correspondencia-backend',
-        version: '1.0.0',
-        timestamp: new Date().toISOString()
-    });
-});
+async function startServer() {
+    try {
+        // Conectar a la base de datos
+        await sequelize.authenticate();
+        console.log('✅ Conexión a la base de datos establecida');
 
-app.listen(PORT, () => {
-    console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
-    console.log(`📚 Health Check: http://localhost:${PORT}/health`);
-});
+        // Sincronizar modelos (solo en desarrollo)
+        if (process.env.NODE_ENV === 'development') {
+            await sequelize.sync({ alter: true });
+            console.log('✅ Modelos sincronizados');
+        }
+
+        // Iniciar servidor
+        app.listen(PORT, () => {
+            console.log(`🚀 Backend corriendo en http://localhost:${PORT}`);
+            console.log(`📚 Health Check: http://localhost:${PORT}/health`);
+        });
+    } catch (error) {
+        console.error('❌ Error al iniciar el servidor:', error);
+        process.exit(1);
+    }
+}
+
+startServer();

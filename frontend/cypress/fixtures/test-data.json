@@ -1,0 +1,18 @@
+{
+    "user": {
+        "email": "admin@infodf.gob.mx",
+        "password": "admin123"
+    },
+    "incoming": {
+        "senderName": "Test Sender",
+        "senderInstitution": "Test Institution",
+        "senderPosition": "Test Position",
+        "recipientName": "Test Recipient",
+        "recipientAreaId": "11111111-1111-1111-1111-111111111111",
+        "subject": "Test Subject for E2E - Debe tener más de 10 caracteres",
+        "urgencyLevel": "URGENT",
+        "isConfidential": false,
+        "pageCount": 5,
+        "observations": "Test observations"
+    }
+}
