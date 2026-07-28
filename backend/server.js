@@ -32,20 +32,20 @@ app.get('/health', (req, res) => {
 // ============================================
 
 /**
- * Crear áreas por defecto
+ * Crear áreas por defecto con UUIDs fijos
  */
 async function createDefaultAreas() {
     const areas = [
-        { code: 'DG', name: 'Dirección General' },
-        { code: 'DAJ', name: 'Dirección de Asuntos Jurídicos' },
-        { code: 'DA', name: 'Dirección de Archivos' },
-        { code: 'DT', name: 'Dirección de Transparencia' },
-        { code: 'AC', name: 'Atención Ciudadana' },
-        { code: 'DF', name: 'Dirección de Finanzas' },
-        { code: 'DRH', name: 'Dirección de Recursos Humanos' },
-        { code: 'DTI', name: 'Dirección de Tecnologías' },
-        { code: 'DCO', name: 'Dirección de Comunicación' },
-        { code: 'DP', name: 'Dirección de Planeación' }
+        { id: '11111111-1111-1111-1111-111111111111', code: 'DG', name: 'Dirección General' },
+        { id: '22222222-2222-2222-2222-222222222222', code: 'DAJ', name: 'Dirección de Asuntos Jurídicos' },
+        { id: '33333333-3333-3333-3333-333333333333', code: 'DA', name: 'Dirección de Archivos' },
+        { id: '44444444-4444-4444-4444-444444444444', code: 'DT', name: 'Dirección de Transparencia' },
+        { id: '55555555-5555-5555-5555-555555555555', code: 'AC', name: 'Atención Ciudadana' },
+        { id: '66666666-6666-6666-6666-666666666666', code: 'DF', name: 'Dirección de Finanzas' },
+        { id: '77777777-7777-7777-7777-777777777777', code: 'DRH', name: 'Dirección de Recursos Humanos' },
+        { id: '88888888-8888-8888-8888-888888888888', code: 'DTI', name: 'Dirección de Tecnologías' },
+        { id: '99999999-9999-9999-9999-999999999999', code: 'DCO', name: 'Dirección de Comunicación' },
+        { id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', code: 'DP', name: 'Dirección de Planeación' }
     ];
 
     try {
@@ -53,8 +53,15 @@ async function createDefaultAreas() {
         
         // Verificar si la tabla de áreas existe
         let existingAreasCount = 0;
+        let areasList = [];
         try {
             existingAreasCount = await Area.count();
+            if (existingAreasCount > 0) {
+                areasList = await Area.findAll({ 
+                    attributes: ['id', 'code', 'name'],
+                    order: [['code', 'ASC']]
+                });
+            }
         } catch (err) {
             console.log('⚠️ La tabla de áreas aún no existe. Se creará al sincronizar.');
         }
@@ -62,7 +69,7 @@ async function createDefaultAreas() {
         console.log(`📊 Áreas existentes: ${existingAreasCount}`);
 
         if (existingAreasCount === 0) {
-            console.log('📝 Creando áreas por defecto...');
+            console.log('📝 Creando áreas por defecto con UUIDs fijos...');
             let createdCount = 0;
             
             for (const areaData of areas) {
@@ -70,13 +77,16 @@ async function createDefaultAreas() {
                     const [area, created] = await Area.findOrCreate({
                         where: { code: areaData.code },
                         defaults: {
+                            id: areaData.id,
                             name: areaData.name,
                             description: `${areaData.name} - Área del Sistema de Control de Correspondencia`
                         }
                     });
                     if (created) {
                         createdCount++;
-                        console.log(`✅ Área creada: ${area.code} - ${area.name}`);
+                        console.log(`✅ Área creada: ${area.code} - ${area.name} (ID: ${area.id})`);
+                    } else {
+                        console.log(`ℹ️ Área ya existe: ${area.code} - ${area.name} (ID: ${area.id})`);
                     }
                 } catch (err) {
                     console.error(`❌ Error al crear área ${areaData.code}:`, err.message);
@@ -84,20 +94,9 @@ async function createDefaultAreas() {
             }
             console.log(`✅ ${createdCount} áreas creadas correctamente`);
         } else {
-            console.log('ℹ️ Ya existen áreas en la base de datos. Mostrando las primeras 5:');
-            try {
-                const areasList = await Area.findAll({ 
-                    limit: 5,
-                    attributes: ['code', 'name'],
-                    order: [['code', 'ASC']]
-                });
-                areasList.forEach(a => console.log(`   - ${a.code}: ${a.name}`));
-                if (existingAreasCount > 5) {
-                    console.log(`   ... y ${existingAreasCount - 5} más`);
-                }
-            } catch (err) {
-                console.log('   No se pudieron listar las áreas:', err.message);
-            }
+            console.log(`ℹ️ Ya existen ${existingAreasCount} áreas en la base de datos.`);
+            console.log('📋 Lista de áreas existentes:');
+            areasList.forEach(a => console.log(`   - ${a.code}: ${a.name} (ID: ${a.id})`));
         }
     } catch (error) {
         console.error('❌ Error al crear áreas:', error.message);
@@ -157,7 +156,7 @@ const startServer = async () => {
         await sequelize.authenticate();
         console.log('✅ Conexión a la base de datos establecida');
         
-        // Sincronizar modelos (force: false para no eliminar datos existentes)
+        // Sincronizar modelos (alter: true para actualizar sin eliminar datos)
         await sequelize.sync({ alter: true });
         console.log('✅ Modelos sincronizados');
         
