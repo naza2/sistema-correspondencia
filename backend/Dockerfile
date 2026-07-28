@@ -1,18 +1,18 @@
-# backend/Dockerfile - Producción
-
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copiar archivos de dependencias
+# Copiar dependencias
 COPY package*.json ./
-RUN npm ci --only=production
 
-# Copiar código fuente
+# Instalar dependencias (incluyendo dev para producción)
+RUN npm install
+
+# Copiar todo el código (incluye src/config/database.js)
 COPY . .
 
 # Exponer puerto
 EXPOSE 3000
 
-# Comando de inicio
-CMD ["node", "server.js"]
+# Iniciar la aplicación
+CMD ["npm", "start"]
