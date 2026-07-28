@@ -5,6 +5,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# ⬅️ NUEVO: Pasar variable de entorno al build
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Copiar dependencias
 COPY package*.json ./
 
