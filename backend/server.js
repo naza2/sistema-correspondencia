@@ -49,23 +49,55 @@ async function createDefaultAreas() {
     ];
 
     try {
-        let createdCount = 0;
-        for (const areaData of areas) {
-            const [area, created] = await Area.findOrCreate({
-                where: { code: areaData.code },
-                defaults: {
-                    name: areaData.name,
-                    description: `${areaData.name} - Área del Sistema de Control de Correspondencia`
-                }
-            });
-            if (created) {
-                createdCount++;
-                console.log(`✅ Área creada: ${area.code} - ${area.name}`);
-            }
+        console.log('🔍 Verificando áreas existentes...');
+        
+        // Verificar si la tabla de áreas existe
+        let existingAreasCount = 0;
+        try {
+            existingAreasCount = await Area.count();
+        } catch (err) {
+            console.log('⚠️ La tabla de áreas aún no existe. Se creará al sincronizar.');
         }
-        console.log(`✅ ${createdCount} áreas cargadas correctamente`);
-        if (createdCount === 0) {
-            console.log('ℹ️ Todas las áreas ya existen');
+        
+        console.log(`📊 Áreas existentes: ${existingAreasCount}`);
+
+        if (existingAreasCount === 0) {
+            console.log('📝 Creando áreas por defecto...');
+            let createdCount = 0;
+            
+            for (const areaData of areas) {
+                try {
+                    const [area, created] = await Area.findOrCreate({
+                        where: { code: areaData.code },
+                        defaults: {
+                            name: areaData.name,
+                            description: `${areaData.name} - Área del Sistema de Control de Correspondencia`
+                        }
+                    });
+                    if (created) {
+                        createdCount++;
+                        console.log(`✅ Área creada: ${area.code} - ${area.name}`);
+                    }
+                } catch (err) {
+                    console.error(`❌ Error al crear área ${areaData.code}:`, err.message);
+                }
+            }
+            console.log(`✅ ${createdCount} áreas creadas correctamente`);
+        } else {
+            console.log('ℹ️ Ya existen áreas en la base de datos. Mostrando las primeras 5:');
+            try {
+                const areasList = await Area.findAll({ 
+                    limit: 5,
+                    attributes: ['code', 'name'],
+                    order: [['code', 'ASC']]
+                });
+                areasList.forEach(a => console.log(`   - ${a.code}: ${a.name}`));
+                if (existingAreasCount > 5) {
+                    console.log(`   ... y ${existingAreasCount - 5} más`);
+                }
+            } catch (err) {
+                console.log('   No se pudieron listar las áreas:', err.message);
+            }
         }
     } catch (error) {
         console.error('❌ Error al crear áreas:', error.message);
@@ -125,8 +157,8 @@ const startServer = async () => {
         await sequelize.authenticate();
         console.log('✅ Conexión a la base de datos establecida');
         
-        // Sincronizar modelos
-        await sequelize.sync();
+        // Sincronizar modelos (force: false para no eliminar datos existentes)
+        await sequelize.sync({ alter: true });
         console.log('✅ Modelos sincronizados');
         
         // Crear áreas por defecto
